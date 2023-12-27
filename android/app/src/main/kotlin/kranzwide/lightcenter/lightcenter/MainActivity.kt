@@ -1,4 +1,4 @@
-package chuysoft.lightcenter.light_center
+package kranzwide.lightcenter.lightcenter
 
 import io.flutter.embedding.android.FlutterActivity
 
