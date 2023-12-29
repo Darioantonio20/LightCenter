@@ -53,6 +53,7 @@ class _LightCenterState extends State<LightCenter> {
                   Theme.of(context).textTheme
               )
           ),
+          debugShowCheckedModeBanner: false, // Quitsa el banner de depuración
           initialRoute: '/',
           navigatorKey: navigationService.getKey(),
           routes: navigationService.routes,
