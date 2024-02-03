@@ -39,14 +39,18 @@ class Login extends StatelessWidget {
       if (state is UserLoaded) {
         fillForm(state.user);
 
-        if (state.user.whatsappNumber != null && state.user.code != null && state.user.location.value != null) {
+        if (state.user.whatsappNumber != null &&
+            state.user.code != null &&
+            state.user.location.value != null) {
           userCubit.validateCredentials().then((value) async {
             if (value['validation'] == true) {
               await userCubit.getAppointmentsBySOAP(withState: false);
-              await NavigationService.pushReplacementNamed(NavigationService.dashboardScreen);
+              await NavigationService.pushReplacementNamed(
+                  NavigationService.dashboardScreen);
             } else {
               await userCubit.removeUserCode();
-              await NavigationService.showSimpleErrorAlertDialog(title: 'Error al iniciar sesión', content: value['message']);
+              await NavigationService.showSimpleErrorAlertDialog(
+                  title: 'Error al iniciar sesión', content: value['message']);
             }
           });
           //validateUser(user: state.user);
@@ -61,14 +65,11 @@ class Login extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   locationsDropDownMenu(),
-
                   TextFormField(
                     controller: usernameController,
                     maxLength: 10,
                     keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: const InputDecoration(
                       prefix: Padding(
                         padding: EdgeInsets.all(8.0),
@@ -87,22 +88,18 @@ class Login extends StatelessWidget {
                     textInputAction: TextInputAction.next,
                     onEditingComplete: () => FocusScope.of(context).nextFocus(),
                   ),
-
                   TextFormField(
                     controller: passwordController,
                     maxLength: 4,
                     keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: const InputDecoration(
                         prefix: Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Icon(Icons.lock),
                         ),
                         labelText: 'Ingrese su código de usuario',
-                        hintText: '0000'
-                    ),
+                        hintText: '0000'),
                     validator: (text) {
                       if (text == null || text.isEmpty || text.length != 4) {
                         return 'Favor de ingresar un código de 4 dígitos';
@@ -115,7 +112,6 @@ class Login extends StatelessWidget {
                       login(user: state.user);
                     },
                   ),
-
                   FilledButton(
                     onPressed: () => login(user: state.user),
                     child: const Text('Ingresar'),
@@ -128,7 +124,8 @@ class Login extends StatelessWidget {
       }
 
       if (state is UserError) {
-        currentScreen = errorScreen(context: context, errorMessage: state.errorMessage.toString());
+        currentScreen = errorScreen(
+            context: context, errorMessage: state.errorMessage.toString());
       }
 
       currentScreen ??= invalidStateScreen(context: context);
@@ -156,9 +153,9 @@ class Login extends StatelessWidget {
         selectedLocation ??= state.locationsList.first;
 
         currentDropDownScreen = DropdownMenu<Location>(
-
-          initialSelection: state.locationsList.where(
-                  (element) => element.id == selectedLocation?.id).first,
+          initialSelection: state.locationsList
+              .where((element) => element.id == selectedLocation?.id)
+              .first,
           leadingIcon: const Icon(Icons.location_city),
           hintText: 'Clínica',
           onSelected: (Location? value) {
@@ -166,14 +163,17 @@ class Login extends StatelessWidget {
               selectedLocation = value;
             }
           },
-          dropdownMenuEntries: state.locationsList.map<DropdownMenuEntry<Location>>((Location value) {
-            return DropdownMenuEntry<Location>(value: value, label: value.city!);
+          dropdownMenuEntries: state.locationsList
+              .map<DropdownMenuEntry<Location>>((Location value) {
+            return DropdownMenuEntry<Location>(
+                value: value, label: value.city!);
           }).toList(),
         );
       }
 
       if (state is LocationError) {
-        currentDropDownScreen = errorScreen(context: context, errorMessage: state.errorMessage.toString());
+        currentDropDownScreen = errorScreen(
+            context: context, errorMessage: state.errorMessage.toString());
       }
 
       return currentDropDownScreen;

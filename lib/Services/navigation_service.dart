@@ -41,21 +41,25 @@ class NavigationService {
     return instance;
   }
 
-  static Future<dynamic> pushNamed(String route, { Object? arguments }) {
+  static Future<dynamic> pushNamed(String route, {Object? arguments}) {
     return _navigationKey.currentState!.pushNamed(route, arguments: arguments);
   }
 
-  static Future<dynamic> pushReplacementNamed(String route, { Object? arguments }) {
-    return _navigationKey.currentState!.pushReplacementNamed(route, arguments: arguments);
+  static Future<dynamic> pushReplacementNamed(String route,
+      {Object? arguments}) {
+    return _navigationKey.currentState!
+        .pushReplacementNamed(route, arguments: arguments);
   }
 
-  static Future<dynamic> popAndPushNamed(String route, { Object? arguments }) {
-    return _navigationKey.currentState!.popAndPushNamed(route, arguments: arguments);
+  static Future<dynamic> popAndPushNamed(String route, {Object? arguments}) {
+    return _navigationKey.currentState!
+        .popAndPushNamed(route, arguments: arguments);
   }
 
-  static Future<dynamic> cleanNavigation(String route, { Object? arguments }) {
+  static Future<dynamic> cleanNavigation(String route, {Object? arguments}) {
     _navigationKey.currentState!.popUntil((route) => route.isFirst);
-    return _navigationKey.currentState!.pushReplacementNamed(route, arguments: arguments);
+    return _navigationKey.currentState!
+        .pushReplacementNamed(route, arguments: arguments);
   }
 
   static void pop() {
@@ -78,17 +82,21 @@ class NavigationService {
     return _navigationKey;
   }
 
-  static void showSnackBar({required String message, SnackBarAction? snackBarAction, Duration duration = const Duration(seconds: 4)}) {
-    ScaffoldMessenger.of(_navigationKey.currentContext!).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          duration: duration,
-          action: snackBarAction,
-        )
-    );
+  static void showSnackBar(
+      {required String message,
+      SnackBarAction? snackBarAction,
+      Duration duration = const Duration(seconds: 4)}) {
+    ScaffoldMessenger.of(_navigationKey.currentContext!).showSnackBar(SnackBar(
+      content: Text(message),
+      duration: duration,
+      action: snackBarAction,
+    ));
   }
 
-  static Future<dynamic> showAlertDialog({required Widget title, required Widget content, List<Widget>? actions}) async {
+  static Future<dynamic> showAlertDialog(
+      {required Widget title,
+      required Widget content,
+      List<Widget>? actions}) async {
     await showDialog<dynamic>(
       barrierDismissible: false,
       context: _navigationKey.currentContext!,
@@ -100,7 +108,8 @@ class NavigationService {
     );
   }
 
-  static Future<dynamic> showSimpleErrorAlertDialog({required String title, required String content}) async {
+  static Future<dynamic> showSimpleErrorAlertDialog(
+      {required String title, required String content}) async {
     return await showDialog<dynamic>(
       barrierDismissible: false,
       context: _navigationKey.currentContext!,
@@ -109,68 +118,66 @@ class NavigationService {
         content: Text(content),
         actions: [
           TextButton(
-              onPressed: () => pop(),
-              //onPressed: () => removeAllRoutes(),
-              child: const Text('Cerrar',
-                style: TextStyle(
-                  color: Colors.red
-                ),
-              )
-          )
+              //onPressed: () => pop(),
+              onPressed: () => removeAllRoutes(),
+              child: const Text(
+                'Cerrar',
+                style: TextStyle(color: Colors.red),
+              ))
         ],
       ),
     );
   }
 
   static void makeCall({String phoneNumber = '5219995514492'}) async {
-    Uri requestUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber
-    );
+    Uri requestUri = Uri(scheme: 'tel', path: phoneNumber);
 
-    if (await canLaunchUrl(requestUri)){
+    if (await canLaunchUrl(requestUri)) {
       await launchUrl(requestUri);
     }
   }
 
   static void openWhatsappLink({String message = ''}) async {
     Uri requestUri = Uri.https('wa.me', '/5219994916865', {'text': message});
-    if (await canLaunchUrl(requestUri)){
-      await launchUrl(
-          requestUri,
-          mode: LaunchMode.inAppWebView
-      );
+    if (await canLaunchUrl(requestUri)) {
+      await launchUrl(requestUri, mode: LaunchMode.inAppWebView);
     }
   }
 
-  static void sendEmail({String email = 'lightcenterclinicas@predictionsoft.com.mx'}) async {
-    Uri requestUri = Uri(
-      scheme: 'mailto',
-      path: email
-    );
+  static void sendEmail(
+      {String email = 'lightcenterclinicas@predictionsoft.com.mx'}) async {
+    Uri requestUri = Uri(scheme: 'mailto', path: email);
 
-    if (await canLaunchUrl(requestUri)){
+    if (await canLaunchUrl(requestUri)) {
       await launchUrl(requestUri);
     }
   }
 
   static Future<dynamic> openInternalRegulations() async {
-    return _navigationKey.currentState!.push(MaterialPageRoute(builder: (context) => const PDFScreen(pdfName: 'Reglamento Interno')));
+    return _navigationKey.currentState!.push(MaterialPageRoute(
+        builder: (context) => const PDFScreen(pdfName: 'Reglamento Interno')));
   }
 
   static Future<dynamic> openSessionIndications() async {
-    return _navigationKey.currentState!.push(MaterialPageRoute(builder: (context) => const PDFScreen(pdfName: 'Indicaciones para sesiones')));
+    return _navigationKey.currentState!.push(MaterialPageRoute(
+        builder: (context) =>
+            const PDFScreen(pdfName: 'Indicaciones para sesiones')));
   }
 
   static Future<dynamic> openOnlinePDF({required String url}) async {
-    return _navigationKey.currentState!.push(MaterialPageRoute(builder: (context) => PDFScreen(pdfName: url, isURL: true)));
+    return _navigationKey.currentState!.push(MaterialPageRoute(
+        builder: (context) => PDFScreen(pdfName: url, isURL: true)));
   }
 
   static Future<dynamic> openLoyalty() async {
-    return _navigationKey.currentState!.push(MaterialPageRoute(builder: (context) => const PDFScreen(pdfName: 'Programa de lealtad')));
+    return _navigationKey.currentState!.push(MaterialPageRoute(
+        builder: (context) => const PDFScreen(pdfName: 'Programa de lealtad')));
   }
 
-  static void openURL({bool secureConnection = true, required String baseUrl, required String endPoint}) async {
+  static void openURL(
+      {bool secureConnection = true,
+      required String baseUrl,
+      required String endPoint}) async {
     late Uri requestUri;
     if (secureConnection == true) {
       requestUri = Uri.https(baseUrl, endPoint);
@@ -178,11 +185,8 @@ class NavigationService {
       requestUri = Uri.http(baseUrl, endPoint);
     }
 
-    if (await canLaunchUrl(requestUri)){
-      await launchUrl(
-          requestUri,
-          mode: LaunchMode.inAppWebView
-      );
+    if (await canLaunchUrl(requestUri)) {
+      await launchUrl(requestUri, mode: LaunchMode.inAppWebView);
     }
   }
 }

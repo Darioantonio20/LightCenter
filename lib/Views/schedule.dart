@@ -167,7 +167,7 @@ class Schedule extends StatelessWidget {
                                 margin: const EdgeInsets.all(4.0),
                                 alignment: Alignment.center,
                                 decoration: const BoxDecoration(
-                                  color: Colors.green,
+                                  color: Color.fromARGB(255, 224, 91, 228),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Text(

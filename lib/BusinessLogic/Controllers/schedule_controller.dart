@@ -19,23 +19,33 @@ late ValueNotifier<DateTime?> selectedDay;
 late ValueNotifier<DateTime> focusedDay;
 List<DateTime> availableDates = [];
 
-void showModal({required List<Appointment> events, required List<String> schedule, required User user}) {
+void showModal(
+    {required List<Appointment> events,
+    required List<String> schedule,
+    required User user}) {
   showModalBottomSheet<void>(
     context: NavigationService.context(),
     isDismissible: false,
     isScrollControlled: true,
     enableDrag: false,
     builder: (BuildContext context) {
-      return eventsModalSheet(selectedDay: selectedDay.value!, events: eventsList, schedule: schedule, user: user);
+      return eventsModalSheet(
+          selectedDay: selectedDay.value!,
+          events: eventsList,
+          schedule: schedule,
+          user: user);
     },
   );
 }
 
 List<Appointment> getEventsForDay() {
-  return eventsList.where((event) => DateUtils.isSameDay(event.dateTime, selectedDay.value)).toList();
+  return eventsList
+      .where((event) => DateUtils.isSameDay(event.dateTime, selectedDay.value))
+      .toList();
 }
 
-Future<List<String>> getDaySchedule({required DateTime day, required User user}) async {
+Future<List<String>> getDaySchedule(
+    {required DateTime day, required User user}) async {
   try {
     String data = await sendSOAPRequest(
         soapAction: 'http://tempuri.org/SPA_HORASDISPONIBLES',
@@ -43,9 +53,9 @@ Future<List<String>> getDaySchedule({required DateTime day, required User user})
         content: {
           'DSNDataBase': user.location.value!.code,
           'NoWhatsAPP': '521${user.whatsappNumber}',
-          'EXTERNAL_FechaCandidata': DateFormat("dd/MM/yyyy").format(day).toString()
-        }
-    );
+          'EXTERNAL_FechaCandidata':
+              DateFormat("dd/MM/yyyy").format(day).toString()
+        });
 
     if (data.contains('ERR:')) {
       return [
@@ -76,7 +86,8 @@ Future<List<String>> getDaySchedule({required DateTime day, required User user})
   }
 }
 
-Future<void> scheduleAppointment({required DateTime day, required User user}) async {
+Future<void> scheduleAppointment(
+    {required DateTime day, required User user}) async {
   for (Appointment appointment in user.treatments.last.scheduledAppointments!) {
     DateTime appointmentAsDT = appointment.dateTime!;
 
@@ -89,10 +100,9 @@ Future<void> scheduleAppointment({required DateTime day, required User user}) as
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(innerContext),
-              child: Text('Ok',
-                style: TextStyle(
-                    color: LightCenterColors.mainPurple
-                ),
+              child: Text(
+                'Ok',
+                style: TextStyle(color: LightCenterColors.mainPurple),
               ),
             ),
           ],
@@ -107,37 +117,44 @@ Future<void> scheduleAppointment({required DateTime day, required User user}) as
     context: NavigationService.context(),
     builder: (BuildContext innerContext) => AlertDialog(
       title: const Text('¿Agendar cita?'),
-      content: Text('¿Deseas la cita para el ${DateFormat.yMMMMd('es-MX').format(day)} a la(s) ${DateFormat.jm().format(day)}?'),
+      content: Text(
+          '¿Deseas la cita para el ${DateFormat.yMMMMd('es-MX').format(day)} a la(s) ${DateFormat.jm().format(day)}?'),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(innerContext),
-          child: const Text('No',
-            style: TextStyle(
-                color: Colors.red
-            ),
+          child: const Text(
+            'No',
+            style: TextStyle(color: Colors.red),
           ),
         ),
         TextButton(
           onPressed: () async {
             Navigator.pop(innerContext);
-            Map<String, dynamic> scheduleResult = await userCubit.scheduleAppointment(day: day);
+            Map<String, dynamic> scheduleResult =
+                await userCubit.scheduleAppointment(day: day);
 
             await showDialog(
               context: NavigationService.context(),
               builder: (BuildContext innerContext) => AlertDialog(
-                title: Text(scheduleResult['scheduled'] ? 'Éxito al agendar' : 'Error al agendar',
+                title: Text(
+                  scheduleResult['scheduled']
+                      ? 'Éxito al agendar'
+                      : 'Error al agendar',
                   style: TextStyle(
-                      color: scheduleResult['scheduled'] ? LightCenterColors.mainPurple : LightCenterColors.mainBrown
-                  ),
+                      color: scheduleResult['scheduled']
+                          ? LightCenterColors.mainPurple
+                          : LightCenterColors.mainBrown),
                 ),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(scheduleResult['scheduled'] ? Icons.check : Icons.close,
-                      color: scheduleResult['scheduled'] ? Colors.green : Colors.red,
+                    Icon(
+                      scheduleResult['scheduled'] ? Icons.check : Icons.close,
+                      color: scheduleResult['scheduled']
+                          ? const Color.fromARGB(255, 224, 91, 228)
+                          : Colors.red,
                       size: 80,
                     ),
-
                     Text(scheduleResult['message'])
                   ],
                 ),
@@ -146,10 +163,9 @@ Future<void> scheduleAppointment({required DateTime day, required User user}) as
                     onPressed: () {
                       NavigationService.pop();
                     },
-                    child: Text('Cerrar',
-                      style: TextStyle(
-                          color: LightCenterColors.mainPurple
-                      ),
+                    child: Text(
+                      'Cerrar',
+                      style: TextStyle(color: LightCenterColors.mainPurple),
                     ),
                   ),
                 ],
@@ -160,10 +176,9 @@ Future<void> scheduleAppointment({required DateTime day, required User user}) as
             await userCubit.getAvailableDatesBySOAP();
             focusedDay.value = day;
           },
-          child: Text('Sí',
-            style: TextStyle(
-                color: LightCenterColors.mainPurple
-            ),
+          child: Text(
+            'Sí',
+            style: TextStyle(color: LightCenterColors.mainPurple),
           ),
         ),
       ],
@@ -171,33 +186,38 @@ Future<void> scheduleAppointment({required DateTime day, required User user}) as
   );
 }
 
-void manageScheduledAppointment({required BuildContext context, required DateTime scheduledDate, required User user}){
+void manageScheduledAppointment(
+    {required BuildContext context,
+    required DateTime scheduledDate,
+    required User user}) {
   showDialog(
     context: context,
     builder: (BuildContext context) => AlertDialog(
       title: const Text('Seleccione una opción'),
-      content: Text('Selecciona una opción para la cita del ${DateFormat.yMMMMd('es-MX').format(scheduledDate)} a la(s) ${DateFormat.jm().format(scheduledDate)}'),
+      content: Text(
+          'Selecciona una opción para la cita del ${DateFormat.yMMMMd('es-MX').format(scheduledDate)} a la(s) ${DateFormat.jm().format(scheduledDate)}'),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text('Cerrar',
-            style: TextStyle(
-                color: LightCenterColors.mainPurple
-            ),
+          child: Text(
+            'Cerrar',
+            style: TextStyle(color: LightCenterColors.mainPurple),
           ),
         ),
         TextButton(
           onPressed: () async {
             Navigator.pop(context);
             await userCubit.cancelAppointment(
-                appointment: user.treatments.last.scheduledAppointments!.where((element) => isSameDay(element.dateTime, scheduledDate) && element.dateTime!.hour == scheduledDate.hour).first
-            );
+                appointment: user.treatments.last.scheduledAppointments!
+                    .where((element) =>
+                        isSameDay(element.dateTime, scheduledDate) &&
+                        element.dateTime!.hour == scheduledDate.hour)
+                    .first);
             //cancelAppointment(context: context, day: scheduledDate, user: user);
           },
-          child: const Text('Cancelar',
-            style: TextStyle(
-                color: Colors.red
-            ),
+          child: const Text(
+            'Cancelar',
+            style: TextStyle(color: Colors.red),
           ),
         ),
       ],
