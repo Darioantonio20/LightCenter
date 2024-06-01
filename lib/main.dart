@@ -15,7 +15,7 @@ import 'package:light_center/colors.dart';
 import 'package:light_center/Data/Repositories/user_repository.dart';
 import 'package:light_center/Data/Repositories/treatment_repository.dart';
 
-void main() async {
+void main() async { 
   WidgetsFlutterBinding.ensureInitialized();
   await Jiffy.setLocale('es_us');
 

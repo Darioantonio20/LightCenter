@@ -53,73 +53,170 @@ class Login extends StatelessWidget {
                   title: 'Error al iniciar sesión', content: value['message']);
             }
           });
-          //validateUser(user: state.user);
         }
 
-        currentScreen = Form(
-          key: formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(50),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  locationsDropDownMenu(),
-                  TextFormField(
-                    controller: usernameController,
-                    maxLength: 10,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: const InputDecoration(
-                      prefix: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(Icons.phone),
-                      ),
-                      labelText: 'Ingrese su número de Whatsapp',
-                      hintText: '9617894561',
-                    ),
-                    validator: (text) {
-                      if (text == null || text.isEmpty || text.length != 10) {
-                        return 'Favor de ingresar un número de 10 dígitos';
-                      }
+        currentScreen = LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth >= 1280 && constraints.maxHeight >= 720) {
+              return Form(
+                key: formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(50),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(child: locationsDropDownMenu()),
+                            SizedBox(width: 16),
+                            Expanded(
+                              child: TextFormField(
+                                controller: usernameController,
+                                maxLength: 10,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                decoration: const InputDecoration(
+                                  prefix: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(Icons.phone),
+                                  ),
+                                  labelText: 'Ingrese su número de Whatsapp',
+                                  hintText: '9617894561',
+                                ),
+                                validator: (text) {
+                                  if (text == null ||
+                                      text.isEmpty ||
+                                      text.length != 10) {
+                                    return 'Favor de ingresar un número de 10 dígitos';
+                                  }
 
-                      return null;
-                    },
-                    textInputAction: TextInputAction.next,
-                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                  ),
-                  TextFormField(
-                    controller: passwordController,
-                    maxLength: 4,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: const InputDecoration(
-                        prefix: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(Icons.lock),
+                                  return null;
+                                },
+                                textInputAction: TextInputAction.next,
+                                onEditingComplete: () =>
+                                    FocusScope.of(context).nextFocus(),
+                              ),
+                            ),
+                          ],
                         ),
-                        labelText: 'Ingrese su código de usuario',
-                        hintText: '0000'),
-                    validator: (text) {
-                      if (text == null || text.isEmpty || text.length != 4) {
-                        return 'Favor de ingresar un código de 4 dígitos';
-                      }
-                      return null;
-                    },
-                    textInputAction: TextInputAction.done,
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).unfocus();
-                      login(user: state.user);
-                    },
+                        SizedBox(height: 16),
+                        TextFormField(
+                          controller: passwordController,
+                          maxLength: 4,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: const InputDecoration(
+                              prefix: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(Icons.lock),
+                              ),
+                              labelText: 'Ingrese su código de usuario',
+                              hintText: '0000'),
+                          validator: (text) {
+                            if (text == null ||
+                                text.isEmpty ||
+                                text.length != 4) {
+                              return 'Favor de ingresar un código de 4 dígitos';
+                            }
+                            return null;
+                          },
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context).unfocus();
+                            login(user: state.user);
+                          },
+                        ),
+                        FilledButton(
+                          onPressed: () => login(user: state.user),
+                          child: const Text('Ingresar'),
+                        ),
+                      ],
+                    ),
                   ),
-                  FilledButton(
-                    onPressed: () => login(user: state.user),
-                    child: const Text('Ingresar'),
-                  )
-                ],
-              ),
-            ),
-          ),
+                ),
+              );
+            } else {
+              return Form(
+                key: formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        locationsDropDownMenu(),
+                        TextFormField(
+                          controller: usernameController,
+                          maxLength: 10,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: const InputDecoration(
+                            prefix: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(Icons.phone),
+                            ),
+                            labelText: 'Ingrese su número de Whatsapp',
+                            hintText: '9617894561',
+                          ),
+                          validator: (text) {
+                            if (text == null ||
+                                text.isEmpty ||
+                                text.length != 10) {
+                              return 'Favor de ingresar un número de 10 dígitos';
+                            }
+
+                            return null;
+                          },
+                          textInputAction: TextInputAction.next,
+                          onEditingComplete: () =>
+                              FocusScope.of(context).nextFocus(),
+                        ),
+                        TextFormField(
+                          controller: passwordController,
+                          maxLength: 4,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: const InputDecoration(
+                              prefix: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(Icons.lock),
+                              ),
+                              labelText: 'Ingrese su código de usuario',
+                              hintText: '0000'),
+                          validator: (text) {
+                            if (text == null ||
+                                text.isEmpty ||
+                                text.length != 4) {
+                              return 'Favor de ingresar un código de 4 dígitos';
+                            }
+                            return null;
+                          },
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context).unfocus();
+                            login(user: state.user);
+                          },
+                        ),
+                        FilledButton(
+                          onPressed: () => login(user: state.user),
+                          child: const Text('Ingresar'),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+          },
         );
       }
 
@@ -160,6 +257,7 @@ class Login extends StatelessWidget {
           hintText: 'Clínica',
           onSelected: (Location? value) {
             if (value != null) {
+
               selectedLocation = value;
             }
           },

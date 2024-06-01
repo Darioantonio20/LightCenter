@@ -307,14 +307,15 @@ SizedBox eventsModalSheet({required DateTime selectedDay, required List<Appointm
             child: Row(
               children: [
                 Center(
-                  child: Text(DateFormat.yMMMMd('es-MX').format(selectedDay).toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                        color: LightCenterColors.mainBrown
-                    ),
-                  ),
-                ),
+  child: Text(
+    "${DateFormat.EEEE('es-MX').format(selectedDay)}, ${DateFormat.yMMMMd('es-MX').format(selectedDay)}",
+    style: TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 22,
+      color: LightCenterColors.mainBrown
+    ),
+  ),
+),
 
                 const Spacer(),
                 Flexible(
@@ -325,7 +326,7 @@ SizedBox eventsModalSheet({required DateTime selectedDay, required List<Appointm
               ],
             ),
           ),
-          
+
           Visibility(
               visible: events.isNotEmpty,
               child: Padding(
@@ -468,11 +469,11 @@ Drawer commonDrawer() {
                 action: () => NavigationService.openSessionIndications()
             ),
 
-            tappableListTileItem(
-                icon: Icons.privacy_tip,
-                title: 'Aviso de Privacidad',
-                action: () => NavigationService.openOnlinePDF(url: 'http://lightcenterclinicas.ddns.net/ImgsRobotWhatsApp/LigthCenterClinicas/Avisodeprivacidad.pdf')
-            ),
+tappableListTileItem(
+    icon: Icons.privacy_tip,
+    title: 'Aviso de Privacidad',
+    action: () => NavigationService.openOnlinePDF(url: 'http://144.126.130.95/ImgsRobotWhatsApp/LightCenterClinicas/Avisodeprivacidad.pdf')
+),
           ],
         ),
 

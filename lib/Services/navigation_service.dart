@@ -153,16 +153,16 @@ class NavigationService {
     }
   }
 
-  static Future<dynamic> openInternalRegulations() async {
-    return _navigationKey.currentState!.push(MaterialPageRoute(
-        builder: (context) => const PDFScreen(pdfName: 'Reglamento Interno')));
-  }
+static Future<dynamic> openInternalRegulations() async {
+  return _navigationKey.currentState!.push(MaterialPageRoute(
+      builder: (context) => PDFScreen(pdfName: 'http://144.126.130.95/ImgsRobotWhatsApp/LightCenterClinicas/Reglamento%20Interno.pdf', isURL: true)));
+}
 
-  static Future<dynamic> openSessionIndications() async {
-    return _navigationKey.currentState!.push(MaterialPageRoute(
-        builder: (context) =>
-            const PDFScreen(pdfName: 'Indicaciones para sesiones')));
-  }
+
+static Future<dynamic> openSessionIndications() async {
+  return _navigationKey.currentState!.push(MaterialPageRoute(
+      builder: (context) => PDFScreen(pdfName: 'http://144.126.130.95/ImgsRobotWhatsApp/LightCenterClinicas/Indicaciones%20para%20Sesiones.pdf', isURL: true)));
+}
 
   static Future<dynamic> openOnlinePDF({required String url}) async {
     return _navigationKey.currentState!.push(MaterialPageRoute(

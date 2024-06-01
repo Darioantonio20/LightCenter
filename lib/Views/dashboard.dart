@@ -41,7 +41,7 @@ class Dashboard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: LightCenterColors.mainPurple.withOpacity(0.9),
                         ),
-                        child: Text('Su próxima cita es el día ${state.user.treatments.last.scheduledAppointments!.isNotEmpty ? state.user.treatments.last.scheduledAppointments!.first.jiffyDate : ''}',
+                        child: Text('Su próxima cita es el día ${state.user.treatments.isNotEmpty && state.user.treatments.last.scheduledAppointments!.isNotEmpty ? state.user.treatments.last.scheduledAppointments!.first.jiffyDate : ''}',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,

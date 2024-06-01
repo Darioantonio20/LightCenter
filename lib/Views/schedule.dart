@@ -62,141 +62,160 @@ class Schedule extends StatelessWidget {
           );
         }
 
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text('Fechas disponibles',
-                style: TextStyle(
-                    color: LightCenterColors.mainBrown,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20
-                ),
-              ),
-            ),
+        ScrollController scrollController = ScrollController();
 
-            Visibility(
-              visible: state.user.treatments.last.dateRanges!.isNotEmpty,
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.1,
-                child: Scrollbar(
-                  trackVisibility: true,
-                  thumbVisibility: true,
-                  child: ListView.builder(
-                      physics: const ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: state.user.treatments.last.dateRanges!.length,
-                      itemBuilder: (context, index) {
-                        late Color rangeColor;
-                        if (index % 2 == 0) {
-                          rangeColor = LightCenterColors.backgroundPurple;
-                        } else {
-                          rangeColor = LightCenterColors.backgroundPink;
-                        }
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            bool isWideScreen = constraints.maxWidth >= 1280 && constraints.maxHeight >= 720;
 
-                        return Container(
-                          color: rangeColor,
-                          child: Text(state.user.treatments.last.dateRanges![index].toString(),
-                            style: const TextStyle(
-                              fontSize: 18
-                            ),
-                          ),
-                        );
-                      }
+            return SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        'Fechas disponibles',
+                        style: TextStyle(
+                          color: LightCenterColors.mainBrown,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
                       ),
-                ),
-              ),
-            ),
+                    ),
+                    Visibility(
+                      visible: state.user.treatments.last.dateRanges!.isNotEmpty,
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        child: Scrollbar(
+                          controller: scrollController,
+                          trackVisibility: true,
+                          thumbVisibility: true,
+                          child: ListView.builder(
+                            controller: scrollController,
+                            physics: const ClampingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: state.user.treatments.last.dateRanges!.length,
+                            itemBuilder: (context, index) {
+                              late Color rangeColor;
+                              if (index % 2 == 0) {
+                                rangeColor = LightCenterColors.backgroundPurple;
+                              } else {
+                                rangeColor = LightCenterColors.backgroundPink;
+                              }
 
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: ValueListenableBuilder(
-                  valueListenable: focusedDay,
-                  builder: (context, iFocusedDay , _) {
-                    return TableCalendar<Appointment>(
-                      firstDay: DateTime.now(),
-                      lastDay: availableDates.last,
-                      focusedDay: iFocusedDay,
-                      startingDayOfWeek: StartingDayOfWeek.monday,
-                      locale: 'es-MX',
-                      enabledDayPredicate: (DateTime date) {
-                        //return if (availableDates.where((element) => isSameDay(element, date)).isNotEmpty || eventsList.where((element) => isSameDay(element.dateTime, date)).isNotEmpty);
-                        return availableDates.where((element) => isSameDay(element, date)).isNotEmpty;
-                      },
-                      eventLoader: (date) {
-                        return eventsList.where((event) => DateUtils.isSameDay(event.dateTime, date)).toList();
-                      },
-                      selectedDayPredicate: (day) {
-                        return isSameDay(selectedDay.value, day);
-                      },
-
-                      onDaySelected: (newSelectedDay, newFocusedDay) {
-                        selectedDay.value = newSelectedDay;
-                        focusedDay.value = newFocusedDay;
-                        getDaySchedule(day: selectedDay.value!, user: state.user).then((daySchedule) {
-                          if (daySchedule.where((element) => element.toLowerCase().contains('error')).toList().isNotEmpty) {
-                            NavigationService.showSnackBar(message: 'Ocurrió un error al cargar los horarios.');
-                          } else {
-                            showModal(
-                                events: getEventsForDay(),
-                                schedule: daySchedule,
-                                user: state.user
-                            );
-                          }
-                        });
-                      },
-                      headerStyle: const HeaderStyle(
-                          formatButtonVisible: false,
-                          titleCentered: true
-                      ),
-                      calendarStyle: CalendarStyle(
-                          markerDecoration: BoxDecoration(
-                              color: LightCenterColors.mainBrown,
-                              shape: BoxShape.circle),
-                          selectedDecoration: BoxDecoration(
-                              color: LightCenterColors.mainPurple,
-                              shape: BoxShape.circle),
-                          todayDecoration: BoxDecoration(
-                              color: LightCenterColors.backgroundPurple,
-                              shape: BoxShape.circle)
-                      ),
-                      calendarBuilders: CalendarBuilders(
-                          defaultBuilder: (context, day, focusedDay) {
-                            if (availableDates.any((availableDate) => isSameDay(availableDate, day))) {
                               return Container(
-                                margin: const EdgeInsets.all(4.0),
-                                alignment: Alignment.center,
-                                decoration: const BoxDecoration(
-                                  color: Color.fromARGB(255, 224, 91, 228),
-                                  shape: BoxShape.circle,
-                                ),
+                                color: rangeColor,
                                 child: Text(
-                                  '${day.day}',
-                                  style: const TextStyle(color: Colors.white), // Color del texto
+                                  state.user.treatments.last.dateRanges![index].toString(),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               );
-                            }
-                            return null;
-                          }
+                            },
+                          ),
+                        ),
                       ),
-                    );
-                  }),
-            )
-          ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: ValueListenableBuilder(
+                        valueListenable: focusedDay,
+                        builder: (context, iFocusedDay, _) {
+                          return TableCalendar<Appointment>(
+                            firstDay: DateTime.now(),
+                            lastDay: availableDates.last,
+                            focusedDay: iFocusedDay,
+                            startingDayOfWeek: StartingDayOfWeek.monday,
+                            locale: 'es-MX',
+                            enabledDayPredicate: (DateTime date) {
+                              return availableDates.where((element) => isSameDay(element, date)).isNotEmpty;
+                            },
+                            eventLoader: (date) {
+                              return eventsList.where((event) => DateUtils.isSameDay(event.dateTime, date)).toList();
+                            },
+                            selectedDayPredicate: (day) {
+                              return isSameDay(selectedDay.value, day);
+                            },
+                            onDaySelected: (newSelectedDay, newFocusedDay) {
+                              selectedDay.value = newSelectedDay;
+                              focusedDay.value = newFocusedDay;
+                              getDaySchedule(day: selectedDay.value!, user: state.user).then((daySchedule) {
+                                if (daySchedule.where((element) => element.toLowerCase().contains('error')).toList().isNotEmpty) {
+                                  NavigationService.showSnackBar(message: 'Ocurrió un error al cargar los horarios.');
+                                } else {
+                                  showModal(
+                                    events: getEventsForDay(),
+                                    schedule: daySchedule,
+                                    user: state.user,
+                                  );
+                                }
+                              });
+                            },
+                            headerStyle: const HeaderStyle(
+                              formatButtonVisible: false,
+                              titleCentered: true,
+                            ),
+                            calendarStyle: CalendarStyle(
+                              markerDecoration: BoxDecoration(
+                                color: LightCenterColors.mainBrown,
+                                shape: BoxShape.circle,
+                              ),
+                              selectedDecoration: BoxDecoration(
+                                color: LightCenterColors.mainPurple,
+                                shape: BoxShape.circle,
+                              ),
+                              todayDecoration: BoxDecoration(
+                                color: LightCenterColors.backgroundPurple,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            calendarBuilders: CalendarBuilders(
+                              defaultBuilder: (context, day, focusedDay) {
+                                if (availableDates.any((availableDate) => isSameDay(availableDate, day))) {
+                                  return Container(
+                                    margin: const EdgeInsets.all(4.0),
+                                    alignment: Alignment.center,
+                                    decoration: const BoxDecoration(
+                                      color: Color.fromARGB(255, 224, 91, 228),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Text(
+                                      '${day.day}',
+                                      style: const TextStyle(color: Colors.white),
+                                    ),
+                                  );
+                                }
+                                return null;
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       }
 
       if (state is UserError) {
-        currentScreen = errorScreen(context: context, errorMessage: '${state.errorMessage}\n\nRecargando datos...');
-        Future.delayed(
-            const Duration(seconds: 5), () {
-              userCubit.getAvailableDatesBySOAP();
+        currentScreen = errorScreen(
+          context: context,
+          errorMessage: '${state.errorMessage}\n\nRecargando datos...',
+        );
+        Future.delayed(const Duration(seconds: 5), () {
+          userCubit.getAvailableDatesBySOAP();
         });
       }
 
       currentScreen ??= invalidStateScreen(context: context);
 
-      return currentScreen!;
+      return Scaffold(
+        appBar: commonAppBar(),
+        body: currentScreen!,
+      );
     });
   }
 }
